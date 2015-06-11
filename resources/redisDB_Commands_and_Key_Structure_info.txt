@@ -1,0 +1,102 @@
+      
+->Key Structures:
+      key => "apid-%{idValue}"
+      key => "diameter-cp-%{CONNECTION}"
+      key => "cmd-%{commandCodeValue}"
+      key => "dnp-%{IMSI_PREFIX}"
+      key => "rst-%{resultCodeValue}"
+
+
+
+->Commands:
+-search for keys:
+keys *
+
+keys [keycode, e.g cmd or mgt or buff or dnp or diameter-cp]-*
+
+
+-look at the values of keys:
+--data type: list
+lrange [keycode(e.g cmd or mgt or buff or dnp or diameter-cp)]-[unique identifier e.g 20134 or 1234 or 123 or sdfgsdfs.dtag]  0 -1
+
+lrange vnp-668561315 0 -1
+1) "{\"type\":\"vnp\",\"WNPMKT_ID\":\"THMRDTAC\",\"WNP_ID\":\"668561315\",\"WNP_
+VALIDFROM\":\"29-JAN-13\",\"WNP_VALIDTO\":\"31-DEC-99\",\"WNP_DESC\":\"Mobile DT
+AC MSRN\"}"
+
+
+--data type: hash
+hgetall [keycode(e.g cmd or mgt or buff or dnp or diameter-cp)]-[unique identifier e.g 20134 or 1234 or 123 or sdfgsdfs.dtag]
+
+hgetall mgt-npe_20150319_071012_19223.xml-processed
+ 1) "STATUS"
+ 2) "PROCESSED"
+ 3) "DECOMPRESSION_START_DATE"
+ 4) "2015/04/11 23:55:21"
+ 5) "DECOMPRESSION_END_DATE"
+ 6) "2015/04/11 23:55:21"
+ 7) "PROCESSING_END_DATE"
+ 8) "2015/04/11 23:56:29"
+ 9) "NDR_RECORDS_PROCESSED"
+10) "202782"
+11) "ODR_RECORDS_CNT"
+12) "250"
+13) "RECEIVED_FROM"
+14) "Could Not Identify"
+15) "RECEIVED_ON"
+16) "2015-04-11T22:54:08.928261Z"
+17) "UDR_RECORDS_CNT"
+18) "66491"
+19) "PROCESSING_START_DATE"
+20) "2015/04/11 23:55:21"
+21) "XML_FILENAME"
+22) "npe_20150319_071012_19223.xml"
+
+
+-insert or update into redis:
+--data type: list
+look at the example of fabio his sample java program should have it already
+
+
+--data type: hash
+hashVal = new HashMap<String, String>();
+dbResponse = null;
+hashVal.put("XML_FILENAME", decompressedFilename);
+hashVal.put("STATUS", "decompressing");
+hashVal.put("DECOMPRESSION_START_DATE", getCurrentDate());
+hashVal.put("DECOMPRESSION_END_DATE", "");
+hashVal.put("PROCESSING_START_DATE", "");
+hashVal.put("PROCESSING_END_DATE", "");
+hashVal.put("RECEIVED_FROM", syncedFromValue);
+hashVal.put("RECEIVED_ON", view.creationTime().toString());
+hashVal.put("SAA_RECORDS_PROCESSED", "");
+jedisInstance.hmset("mgt-" + decompressedFilename + "-decompressing", hashVal);
+
+
+-delete records in redis
+del [keycode(e.g cmd or mgt or buff or dnp or diameter-cp)]-[unique identifier e.g 20134 or 1234 or 123 or sdfgsdfs.dtag]
+
+
+
+
+1. diameter numbering plan:
+lrange dnp-23451 0 -1
+1) "{\"NETWORK_NAME\":\"UK Broadband\",\"MCC\":\"234\",\"MNC\":\"51\",\"IMSI_PREFIX\":\"23451\",\"REALM\":\"ukblte.com\",\"COUNTRY\":null,\"VALID_FROM\":null,\"VALID_UNTIL\":null}"
+
+
+
+
+2. application-id:
+range apid-16777330 0 -1
+1) "{\"idValue\":\"16777330\",\"name\":\"Rivada Xm\",\"reference\":\"[Vincent_D_Onofrio]\",\"Valid_From\":null,\"Valid_To\":null}"
+
+
+
+3. command code:
+lrange cmd-319 0 -1
+1) "{\"commandCodeValue\":\"319\",\"commandCodeName\":\"Insert-Subscriber-Data\",\"Home_Issued_Request\":\"Yes\",\"Valid_From\":null,\"Valid_To\":null}"
+
+
+4. result-codes:
+lrange rst-5031 0 -1
+1) "{\"appID\":\"0\",\"resultCodeValue\":\"5031\",\"resultCode\":\"DIAMETER_RATING_FAILED\",\"description\":\"OCS was not able to correctly rate the service due to errors in one or more AVPs provided in the CCR.\",\"comment\":\"Transaction Failed\",\"reference\":\"Base Diameter\",\"Valid_From\":null,\"Valid_To\":null}"
