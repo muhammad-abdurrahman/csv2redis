@@ -27,14 +27,7 @@ public class DataEntity {
     public ArrayList<String> getKeys() {
         return this.keys;
     }
-
-//    public void addDocument(HashMap<String, String> document){
-//        this.document.add(document);
-//    }
-//    
-//    public ArrayList<HashMap<String, String>> getDocuments(){
-//        return this.document;
-//    }
+    
     public void addDocument(ArrayList<LinkedHashMap<String, String>> document) {
         if (this.dataset == null) {
             dataset = new ArrayList<>();
@@ -64,16 +57,6 @@ public class DataEntity {
         for (ArrayList<LinkedHashMap<String, String>> documents : this.getDocuments()) {
             for (LinkedHashMap<String, String> document : documents) {
                 str += getJsonFormattedStringOfDocument(document);
-                
-//                str += "{";
-//                for (String key : document.keySet()) {
-//                    str += "\"" + key + "\":" + "\"" + document.get(key) + "\", ";
-//                }
-//                // remove last comma
-//                int index = str.lastIndexOf(",");
-//                str = new StringBuilder(str).replace(index, index + 1, "").toString();
-//
-//                str += "}";
             }
         }
         return str;

@@ -25,7 +25,6 @@ public class Csv2Redis {
      */
     public static void main(String[] args) {
         processArguments(args);
-//        System.out.println(DataEntity.getDataEntityFromCSV(inputFile).getDocuments().get(0));
         outputDataEntityToRedis(DataEntity.getDataEntityFromCSV(inputFile));
 //        outputDataEntityToJsonFile(DataEntity.getDataEntityFromCSV(inputFile));
     }
@@ -36,7 +35,7 @@ public class Csv2Redis {
             System.exit(0);
         }
         if (String.valueOf(args[0].charAt(1)).equalsIgnoreCase(Option.H.name())) {
-            // if -H is specified then display help message and exit program
+            // if -h is specified then display help message and exit program
             System.out.println(ArgumentHandler.getOptionValue(Option.H, args));
             System.exit(0);
         }
