@@ -16,9 +16,9 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisConnection {
 
-    public static Jedis RedisConnection(String redisConnStr) {
+    public static Jedis RedisConnection(String redisUrl, int redisPort) {
         try {
-            Jedis jedis = new Jedis(redisConnStr);
+            Jedis jedis = new Jedis(redisUrl, redisPort);
             return jedis;
         } catch (Exception e) {
             System.out.println("Error: unable to load driver class!" + e);
